@@ -1,8 +1,6 @@
 package router
 
 import (
-	"os"
-
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/middleware"
 	"github.com/kevinanielsen/go-fast-cdn/ui"
@@ -10,16 +8,27 @@ import (
 
 // Router initializes the router and sets up middleware, routes, etc.
 // It returns a *gin.Engine instance configured with the routes, middleware, etc.
-func Router() {
+func Router() *gin.Engine{
+	/*
+	Setups a router
+	*/
 	r := gin.Default()
 
+	/*
+	Configures CORS middleware
+	*/
 	r.Use(middleware.CORSMiddleware())
 
-	// Add all the API routes
+	// Adds and group the various routes for API
 	AddApiRoutes(r)
 
 	// Add the embedded ui routes
 	ui.AddRoutes(r)
 
-	r.Run(":" + os.Getenv("PORT"))
+	/*
+	Glorified wrapper of listen and serve without options
+	*/
+	// r.Run(":" + os.Getenv("PORT"))
+
+	return r
 }

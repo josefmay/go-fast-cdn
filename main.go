@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"net/http"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kevinanielsen/go-fast-cdn/src/database"
@@ -20,6 +22,16 @@ func init() {
 }
 
 func main() {
-	log.Printf("Starting server on port %v", os.Getenv("PORT"))
-	router.Router()
+	log.Printf("[info] strating http server, listening on port %v", os.Getenv("PORT"))
+	r := router.Router()
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
+	log.Printf(port)
+	s := &http.Server{
+		Addr:	port,
+		Handler:	r,
+	}
+	err := s.ListenAndServe()
+	if err != nil {
+		log.Printf("[error] server err: %v", err)
+	}
 }
